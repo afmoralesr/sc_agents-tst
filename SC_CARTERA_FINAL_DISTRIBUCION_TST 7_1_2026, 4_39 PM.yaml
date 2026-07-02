@@ -1,0 +1,1029 @@
+name: SC_CARTERA_FINAL_DISTRIBUCION_TST
+tables:
+  - name: SC_CARTERA_FINAL_DISTRIBUCION
+    synonyms:
+      - Cartera
+      - Cartera Morosos
+    description: |
+      La tabla contiene datos referente a clientes que se encuentran en un proceso de cobranza referente a su ciclo facturación, es decir son clientes deudores , se contempla una promoción para cada cliente. 
+
+      Cada registro representa un cliente en la cartera morosos, se contemplan clientes de 1 a 90 días de mora, incluyendo detalles sobre los métodos de pago, las fechas de vencimiento, los niveles de riesgo, el valor de saldos vencido y por vencer, incluidos los días de mora y los datos de contacto del cliente. 
+
+      Un cliente puede tener varios registros ya que tienen asociado una distribución diferente.
+    base_table:
+      database: SC_TST
+      schema: SC
+      table: SC_CARTERA_FINAL_DISTRIBUCION
+    dimensions:
+      - name: BLACKLIST
+        synonyms:
+          - Lista de exclusión
+          - Lista negra
+        description: Indicador que indica si el cliente pertenece a lista negra
+        expr: BLACKLIST
+        data_type: VARCHAR(2)
+        sample_values:
+          - SI
+          - 'NO'
+      - name: CICLO
+        synonyms:
+          - Ciclo Facturación
+          - Dia de Ciclo
+        description: Numero del día de mes en que el cliente empieza y termina su facturación.
+        expr: CICLO
+        data_type: NUMBER(38,0)
+        sample_values:
+          - '21'
+          - '27'
+          - '2'
+      - name: CLIENTE
+        synonyms:
+          - ID Cliente
+          - Numero de Cuenta
+          - Numero de Suscriptor
+        description: Numero de cliente asociada al cliente
+        expr: CLIENTE
+        data_type: VARCHAR(100)
+        sample_values:
+          - '46884203'
+          - '51214437'
+          - '45007783'
+      - name: CODIGO_POSTAL
+        synonyms:
+          - CP
+        description: Código Postal asociada a la dirección del cliente.
+        expr: CODIGO_POSTAL
+        data_type: VARCHAR(30)
+        sample_values:
+          - '67483'
+          - '96580'
+          - '38036'
+      - name: COLONIA
+        synonyms:
+          - Barrio
+          - Vecindario
+        description: Colonia asociada a la dirección cliente.
+        expr: COLONIA
+        data_type: VARCHAR(350)
+        sample_values:
+          - EJIDO OJO DE AGUA
+          - ALTA VISTA
+          - LAZARO CARDENAS 2O SECTOR
+      - name: CORREO
+        synonyms:
+          - Correo Electrónico
+          - Dirección Electrónica
+          - Email
+          - Mail
+        description: Dirección de correo electrónico asociada al cliente.
+        expr: CORREO
+        data_type: VARCHAR(350)
+        sample_values:
+          - guzmanvazquezguillermo2@gmail.com
+          - sonnita712@gmail.com
+          - jorgealvi67@gmail.com
+      - name: DESCRIPCION_DE_EQUIPOS
+        synonyms:
+          - Detalle Equipos
+          - Especificaciones Equipos
+        description: Detalle técnico o comercial de los dispositivos.
+        expr: DESCRIPCION_DE_EQUIPOS
+        data_type: VARCHAR(16777216)
+        sample_values:
+          - EMTA Sagemcom Fast 3890 DOCSIS 3.1
+          - MTA ARRIS TG2482 DOCSIS 3.0
+          - Arris - TG3442ANA | ZTE model B866V2FI
+      - name: DIA_VENCIMIENTO
+        synonyms:
+          - Dia fin
+          - Dia pago
+          - Fecha limite de pago
+        description: Dia de mes donde el cliente tiene la obligación de realizar el pago.
+        expr: DIA_VENCIMIENTO
+        data_type: NUMBER(38,0)
+        sample_values:
+          - '12'
+          - '6'
+          - '1'
+      - name: DISTRIBUCION
+        synonyms:
+          - Distribución
+          - Distribución Clientes
+          - Gestión
+        description: Canal responsable por la gestión de la cuenta
+        expr: DISTRIBUCION
+        data_type: VARCHAR(100)
+        sample_values:
+          - CC INTERNO
+          - SUCURSALES
+          - TELEGESTION
+      - name: DIVISION
+        synonyms:
+          - División Domicilio
+          - División Geográfica
+        description: División geográfica en México asociada al cliente
+        expr: DIVISION
+        data_type: VARCHAR(30)
+        sample_values:
+          - NORTE
+          - CENTRO SUR
+      - name: ENTRE_CALLE_1
+        synonyms:
+          - Calle 1
+        description: Nombre de la calle_1 que se utiliza como referencia geográfica para ubicar el domicilio del cliente.
+        expr: ENTRE_CALLE_1
+        data_type: VARCHAR(16777216)
+        sample_values:
+          - HDA DEL CARMEN
+          - VALLE DE ZAPOPAN
+      - name: ENTRE_CALLE_2
+        synonyms:
+          - Calle 2
+        description: Nombre de la calle_2 que se utiliza como referencia geográfica para ubicar el domicilio del cliente.
+        expr: ENTRE_CALLE_2
+        data_type: VARCHAR(16777216)
+        sample_values:
+          - AVENIDA METROPLEX
+          - VALLECILLO
+          - AV ACUEDUCTO
+      - name: ESTATUS_CUENTA
+        synonyms:
+          - Estado de Cuentas
+        description: |
+          Estatus actual de la cuenta, Activo el cliente tiene acceso a sus servicios e inactivo el cliente ya no tiene acceso a sus servicios.
+        expr: ESTATUS_CUENTA
+        data_type: VARCHAR(16777216)
+        sample_values:
+          - Inactiva
+          - Cancelada
+          - Activa
+      - name: ESTATUS_INTERNET
+        synonyms:
+          - Estado Internet
+        description: Estatus referente al servicio del internet, Activo el cliente tiene acceso al servicio, Inactivo el cliente tiene suspendido el servicio y NULL el cliente no tiene contratado el servicio.
+        expr: ESTATUS_INTERNET
+        data_type: VARCHAR(16777216)
+        sample_values:
+          - Activo
+          - Inactivo
+      - name: ESTATUS_TELEFONIA
+        synonyms:
+          - Estado Telefonía
+        description: Estatus referente al servicio de telefonía, Activo el cliente tiene acceso al servicio, Inactivo el cliente tiene suspendido el servicio y NULL el cliente no tiene contratado el servicio.
+        expr: ESTATUS_TELEFONIA
+        data_type: VARCHAR(16777216)
+        sample_values:
+          - Activo
+          - Inactivo
+      - name: ESTATUS_VIDEO
+        synonyms:
+          - Estado Video
+        description: Estatus referente al servicio de video, Activo el cliente tiene acceso al servicio, Inactivo el cliente tiene suspendido el servicio y NULL el cliente no tiene contratado el servicio.
+        expr: ESTATUS_VIDEO
+        data_type: VARCHAR(16777216)
+        sample_values:
+          - Cancelado
+          - Activo
+      - name: EXENTO_COLLECTIONS
+        synonyms:
+          - Exento
+          - Flag Collections
+          - Privilegio Collections
+        description: |
+          Indicador que nos explica si el cliente esta exento de entrar a la cartera o no.
+        expr: EXENTO_COLLECTIONS
+        data_type: NUMBER(38,0)
+        sample_values:
+          - '0'
+      - name: FLG_MOVIL
+        synonyms:
+          - Bandera Móvil
+        description: Indica si el cliente tiene contratado IZZI Móvil "Y" = TRUE , "N"= FALSE.
+        expr: FLG_MOVIL
+        data_type: VARCHAR(1)
+        sample_values:
+          - 'Y'
+          - 'N'
+      - name: FLG_STATUS_COLLECTION
+        synonyms:
+          - Bandera Estatus Collection
+        description: Indica el estado dentro de la etapa de gestión de cobranza. SUSPENDIDA de 0 a 18 días mora. INACTIVA de  19 a 90 días mora.
+        expr: FLG_STATUS_COLLECTION
+        data_type: VARCHAR(16777216)
+        sample_values:
+          - INACTIVA
+          - SUSPENDIDA
+      - name: HUB
+        description: Almacena el nombre del centro o ubicación del servicio.
+        expr: HUB
+        data_type: VARCHAR(30)
+        sample_values:
+          - AR
+          - CAD
+          - TOL
+      - name: LATITUD_DOM
+        synonyms:
+          - Coordenada Norte-Sur
+          - Latitud
+        description: Coordenada geográfica asociada a la latitud del domicilio.
+        expr: LATITUD_DOM
+        data_type: NUMBER(22,7)
+        sample_values:
+          - '19.6393780'
+          - '21.1680790'
+          - '19.5582600'
+      - name: LONGITUD_DOM
+        synonyms:
+          - Coordenada Este-Oeste
+          - Longitud
+        description: Coordenada geográfica asociada a la longitud del domicilio.
+        expr: LONGITUD_DOM
+        data_type: NUMBER(22,7)
+        sample_values:
+          - '-100.4640720'
+          - '-99.3113110'
+          - '-99.2171710'
+      - name: MATERIAL_SAP
+        synonyms:
+          - Material SAP
+        description: Numero asociado a los materiales según el catálogo de SAP.
+        expr: MATERIAL_SAP
+        data_type: VARCHAR(16777216)
+        sample_values:
+          - 30374 | 32498
+          - '31574'
+          - '28928'
+      - name: METODO_PAGO
+        synonyms:
+          - Forma pago
+          - Modo pago
+        description: |
+          Forma en que el cliente paga la facturación de su cuenta ( TDC = Tarjeta de Crédito o Efectivo)
+        expr: METODO_PAGO
+        data_type: VARCHAR(16777216)
+        sample_values:
+          - Efectivo
+          - TDC
+      - name: MODELO_DE_EQUIPOS
+        description: Numero de Serie de los modelos comerciales de los equipos asignados.
+        expr: MODELO_DE_EQUIPOS
+        data_type: VARCHAR(16777216)
+        sample_values:
+          - CGA4233TLV2
+          - TG2482
+          - TC8305
+      - name: MOVIL
+        synonyms:
+          - Celular
+          - IZZI Móvil
+        description: Numero Celular registro al contacto del cliente.
+        expr: MOVIL
+        data_type: VARCHAR(16777216)
+        sample_values:
+          - '7472263460'
+          - 5668147646 | 5668147647
+      - name: MUNICIPIO
+        synonyms:
+          - Alcaldía
+          - Ayuntamiento
+        description: Lugar del municipio donde se ofrece el servicio.
+        expr: MUNICIPIO
+        data_type: VARCHAR(50)
+        sample_values:
+          - SAN NICOLAS DE LOS GARZA
+          - GUADALAJARA
+          - TLALNEPANTLA DE BAZ
+      - name: NODO
+        description: Identificador de red del nodo de servicio.
+        expr: NODO
+        data_type: VARCHAR(30)
+        sample_values:
+          - N01
+          - N08
+          - N05
+      - name: NOMBRE
+        description: Nombre completo (Nombres, Apellido Paterno & Apellido Materno) del cliente.
+        expr: NOMBRE
+        data_type: VARCHAR(100)
+        sample_values:
+          - FERNANDO AZAEL ELIZALDE BIBIAN
+          - TANIA CELENE CRUZ MORAN
+          - DANIEL YAÑEZ CARDENAS
+      - name: NOMBRE_CALLE
+        synonyms:
+          - Avenida
+          - Calle
+          - Cerrada
+          - Circuito
+          - Dirección
+        description: Nombre de calle asociado al domicilio del cliente.
+        expr: NOMBRE_CALLE
+        data_type: VARCHAR(16777216)
+        sample_values:
+          - NATIVIDAD DE LA GARZA
+          - BRASILENOS
+          - BUGAMBILIA
+      - name: NOMBRE_RPT
+        description: Nombre descriptivo de la plaza o hub de telecomunicaciones, equivalente al código RPT pero en formato alfanumérico más cercano al nombre de la plaza.
+        expr: NOMBRE_RPT
+        data_type: VARCHAR(30)
+        sample_values:
+          - TOLUCA
+          - MONTERREY
+          - IXTAPALUCA
+      - name: NUMERO
+        description: Primer numero de referencia de contacto para el cliente.
+        expr: NUMERO
+        data_type: VARCHAR(16777216)
+        sample_values:
+          - '8126713622'
+          - '3344932732'
+          - '4811232503'
+      - name: NUMERO_10
+        description: Decimo numero de referencia de contacto para el cliente.
+        expr: NUMERO_10
+        data_type: VARCHAR(16777216)
+        sample_values:
+          - '5565504976'
+          - '5586889632'
+          - '8335078382'
+      - name: NUMERO_2
+        description: Segundo numero de referencia de contacto para el cliente.
+        expr: NUMERO_2
+        data_type: VARCHAR(16777216)
+        sample_values:
+          - '5626586491'
+          - '5622295977'
+          - '3344938857'
+      - name: NUMERO_3
+        description: Tercero numero de referencia de contacto para el cliente.
+        expr: NUMERO_3
+        data_type: VARCHAR(16777216)
+        sample_values:
+          - '9371409565'
+          - '5565802133'
+          - '5526783633'
+      - name: NUMERO_4
+        description: Cuarto numero de referencia de contacto para el cliente.
+        expr: NUMERO_4
+        data_type: VARCHAR(16777216)
+        sample_values:
+          - '2411880189'
+          - '8121815806'
+          - '3317465920'
+      - name: NUMERO_5
+        description: Quinto numero de referencia de contacto para el cliente.
+        expr: NUMERO_5
+        data_type: VARCHAR(16777216)
+        sample_values:
+          - '9811387120'
+          - '8135585236'
+          - '9919598496'
+      - name: NUMERO_6
+        description: Sexto numero de referencia de contacto para el cliente.
+        expr: NUMERO_6
+        data_type: VARCHAR(16777216)
+        sample_values:
+          - '7772887252'
+          - '5511243019'
+      - name: NUMERO_7
+        description: Septimo numero de referencia de contacto para el cliente.
+        expr: NUMERO_7
+        data_type: VARCHAR(16777216)
+        sample_values:
+          - '5584358811'
+          - '8119318849'
+          - '8140406900'
+      - name: NUMERO_8
+        description: Octavo numero de referencia de contacto para el cliente.
+        expr: NUMERO_8
+        data_type: VARCHAR(16777216)
+        sample_values:
+          - '5534859108'
+          - '8183006630'
+          - '4428117110'
+      - name: NUMERO_9
+        description: Noveno numero de referencia de contacto para el cliente.
+        expr: NUMERO_9
+        data_type: VARCHAR(16777216)
+        sample_values:
+          - '5547624969'
+          - '5557590335'
+          - '8113853774'
+      - name: NUMERO_DE_DOMICILIO
+        synonyms:
+          - Lote
+          - Manzana
+          - Numero Exterior
+          - Numero Vivienda
+        description: Número exterior de la vivienda o local.
+        expr: NUMERO_DE_DOMICILIO
+        data_type: VARCHAR(16777216)
+        sample_values:
+          - '40302'
+          - '111'
+          - '952'
+      - name: NUMERO_INTERIOR
+        synonyms:
+          - Numero Casa
+          - Numero de unidad
+          - Numero departamento
+        description: Numero de casa interior asociado al domicilio del cliente.
+        expr: NUMERO_INTERIOR
+        data_type: VARCHAR(30)
+        sample_values:
+          - '3'
+          - CASA 24
+          - 3 B
+      - name: NUMERO_IZZI
+        synonyms:
+          - Número de teléfono
+          - Numero fijo
+          - Numero local
+        description: Numero de teléfono fijo asociado al servicio de telefonía proporcionado por IZZI.
+        expr: NUMERO_IZZI
+        data_type: VARCHAR(16777216)
+        sample_values:
+          - '5592543409'
+          - '5596771699'
+          - '3344938857'
+      - name: PAQUETE
+        synonyms:
+          - Combo
+          - Productos
+          - Servicios Adquiridos
+        description: |
+          Nombre de paquete contratado en la cuenta, el numero después de izzi es el numero megas contratados.
+        expr: PAQUETE
+        data_type: VARCHAR(250)
+        sample_values:
+          - izzi 200 + izzitv HD con Vix Premium con HBO Max con anuncios con Apple TV
+          - izzi 120 con Vix Premium
+          - izzi 80 + izzitv HD
+      - name: PLAY_CLIENTE
+        synonyms:
+          - Play VIT
+          - VIT
+        description: Código que identifica el tipo de servicio o combinación de servicios contratados por un cliente. Puede representar un servicio individual (por ejemplo, Video, Internet, Telefonía fija o Móvil) o un paquete que agrupa varios de ellos.
+        expr: PLAY_CLIENTE
+        data_type: VARCHAR(8)
+        sample_values:
+          - I
+          - VIT
+          - SIN PLAY
+      - name: PLAZA
+        synonyms:
+          - Ciudad
+          - Sede
+          - Sucursal
+        description: Nombre del lugar geográfico específico donde se brinda el servicio al cliente o donde está registrada la cuenta.
+        expr: PLAZA
+        data_type: VARCHAR(200)
+        sample_values:
+          - CANCUN
+          - PUERTO VALLARTA
+          - ZAPOPAN
+      - name: RAMAL
+        description: Segmento específico de la red de distribución.
+        expr: RAMAL
+        data_type: VARCHAR(30)
+        sample_values:
+          - R14
+          - R18
+          - R8
+      - name: RAZON_AJUSTE
+        synonyms:
+          - Causa Ajuste
+          - Motivo Ajuste
+        description: |
+          Motivo por el que se realizo un ajuste en la cobranza del cliente, no se incluyen errores operativos solo ajustes por promociones o convenio de cobranza.
+        expr: RAZON_AJUSTE
+        data_type: VARCHAR(30)
+        sample_values:
+          - MASIVO
+          - CONVENIO DE COBRANZA
+      - name: REGION
+        description: Región geográfica en México asociada al cliente (Norte, Metro, Sur).
+        expr: REGION
+        data_type: VARCHAR(120)
+        sample_values:
+          - SUR
+          - NORTE
+          - METRO
+      - name: RIESGO
+        description: Nivel de riesgo asignado por la segmentación del cliente
+        expr: RIESGO
+        data_type: VARCHAR(20)
+        sample_values:
+          - Riesgo Medio
+          - Riesgo Alto/Muy Alto
+          - <= 12 Meses
+      - name: RPT
+        synonyms:
+          - Plaza Red Publica
+          - Red Publica Telecomunicaciones
+        description: Código que identifica la plaza o Red Pública de Telecomunicaciones (RPT) en la que se encuentra el cliente.
+        expr: RPT
+        data_type: VARCHAR(10)
+        sample_values:
+          - '406'
+          - '400'
+          - '300'
+      - name: RPT_OPERATIVO
+        synonyms:
+          - Nombre Plaza Publica
+          - Nombre Red Publica
+        description: Nombre descriptivo de la plaza o hub de telecomunicaciones, equivalente al código RPT pero en formato alfanumérico más cercano al nombre de la plaza
+        expr: RPT_OPERATIVO
+        data_type: VARCHAR(200)
+        sample_values:
+          - PUERTO VALLARTA
+          - TOLUCA
+          - ECATEPEC
+      - name: SCORE
+        synonyms:
+          - clasificación
+          - Puntuación
+        description: Clasificación de comportamiento de pago del cliente acorde a los pagos realizados.
+        expr: SCORE
+        data_type: VARCHAR(30)
+        sample_values:
+          - Nuevo Medio
+          - Muy recurrente Alto
+          - Baby Medio
+      - name: SEGMENTACION
+        synonyms:
+          - Clasificación Cliente
+        description: Clasificación de segmentación del cliente, los que empiezan por N son clientes nuevos y los que empiezan por A son clientes antiguos
+        expr: SEGMENTACION
+        data_type: VARCHAR(20)
+        sample_values:
+          - AC
+          - N1
+          - MB
+      - name: SERIE_DE_EQUIPOS
+        synonyms:
+          - Código Equipo
+          - Referencia Equipo
+        description: Listado de números de serie de los equipos asociada a cada cliente, se concatenan por |.
+        expr: SERIE_DE_EQUIPOS
+        data_type: VARCHAR(16777216)
+        sample_values:
+          - BS10097072013227 | Z43621091303609 | Z47024020149595 | Z47024080006016
+          - ZTEGDA0FC432
+          - ZTEGDAC3C791
+      - name: SUBREGION
+        synonyms:
+          - Subárea
+          - Subterritorio
+          - Subzona
+        description: Subregión geográfica en México asociada al cliente (Norte, Metro, Sur).
+        expr: SUBREGION
+        data_type: VARCHAR(120)
+        sample_values:
+          - SURESTE
+          - METROPOLITANA
+          - NORESTE
+      - name: SUBTIPO_CLIENTE
+        synonyms:
+          - Subcategoría
+          - Subclase
+        description: Subtipo asociada al tipo de cliente, no se aceptan clientes que sean empleados de izzi.
+        expr: SUBTIPO_CLIENTE
+        data_type: VARCHAR(30)
+        sample_values:
+          - Empleados izzi
+          - Cuenta Hijo
+          - Empleado Sindicalizado
+      - name: TIPO_CLIENTE
+        synonyms:
+          - Categoría
+          - Clase
+          - Tipo
+        description: Tipo de cliente, únicamente  se ingresan los tipos de clientes comercial, residencial y negocio.
+        expr: TIPO_CLIENTE
+        data_type: VARCHAR(30)
+        sample_values:
+          - Centrex PYME
+          - Negocio
+          - Comercial
+      - name: TIPO_TELEFONO_1
+        description: Tipo de teléfono (Móvil o Fijo) acorde al primer numero de contacto del cliente.
+        expr: TIPO_TELEFONO_1
+        data_type: VARCHAR(16777216)
+        sample_values:
+          - Servicio de Telefonia
+          - izzi móvil
+          - Celular
+      - name: TIPO_TELEFONO_10
+        description: Tipo de teléfono (Móvil o Fijo) acorde al decimo numero de contacto del cliente.
+        expr: TIPO_TELEFONO_10
+        data_type: VARCHAR(16777216)
+        sample_values:
+          - Celular
+          - Principal
+          - Servicio de Telefonia
+      - name: TIPO_TELEFONO_2
+        description: Tipo de teléfono (Móvil o Fijo) acorde al segundo numero de contacto del cliente.
+        expr: TIPO_TELEFONO_2
+        data_type: VARCHAR(16777216)
+        sample_values:
+          - Celular
+          - Servicio de Telefonia
+      - name: TIPO_TELEFONO_3
+        description: Tipo de teléfono (Móvil o Fijo) acorde al tercero numero de contacto del cliente.
+        expr: TIPO_TELEFONO_3
+        data_type: VARCHAR(16777216)
+        sample_values:
+          - Principal
+          - Principal/Celular
+          - Servicio de Telefonia
+      - name: TIPO_TELEFONO_4
+        description: |
+          Tipo de teléfono (Móvil o Fijo) acorde al cuarto numero de contacto del cliente.
+        expr: TIPO_TELEFONO_4
+        data_type: VARCHAR(16777216)
+        sample_values:
+          - Oficina
+          - Principal
+      - name: TIPO_TELEFONO_5
+        description: |
+          Tipo de teléfono (Móvil o Fijo) acorde al quinto numero de contacto del cliente
+        expr: TIPO_TELEFONO_5
+        data_type: VARCHAR(16777216)
+        sample_values:
+          - Oficina/Celular
+          - izzi móvil
+      - name: TIPO_TELEFONO_6
+        description: |
+          Tipo de teléfono (Móvil o Fijo) acorde al sexto numero de contacto del cliente.
+        expr: TIPO_TELEFONO_6
+        data_type: VARCHAR(16777216)
+        sample_values:
+          - Celular
+          - Servicio de Telefonia
+      - name: TIPO_TELEFONO_7
+        description: Tipo de teléfono (Móvil o Fijo) acorde al séptimo numero de contacto del cliente.
+        expr: TIPO_TELEFONO_7
+        data_type: VARCHAR(16777216)
+        sample_values:
+          - Servicio de Telefonia
+          - Principal
+          - izzi móvil
+      - name: TIPO_TELEFONO_8
+        description: |
+          Tipo de teléfono (Móvil o Fijo) acorde al octavo numero de contacto del cliente.
+        expr: TIPO_TELEFONO_8
+        data_type: VARCHAR(16777216)
+        sample_values:
+          - Celular
+          - Servicio de Telefonia
+          - Mensajes
+      - name: TIPO_TELEFONO_9
+        description: Tipo de teléfono (Móvil o Fijo) acorde al noveno numero de contacto del cliente.
+        expr: TIPO_TELEFONO_9
+        data_type: VARCHAR(16777216)
+        sample_values:
+          - Principal
+          - Celular
+    time_dimensions:
+      - name: FECHA_EJECUCION
+        synonyms:
+          - Fecha Actual
+          - Fecha Carga
+          - Hoy
+        description: 'Fecha en que se realizo la carga de datos y se insertaron en la tabla, es decir, todos los atributos que se calculan con Fecha Actual usarían la fecha de ejecución como Fecha actual.  '
+        expr: FECHA_EJECUCION
+        data_type: DATE
+        sample_values:
+          - '2026-06-07'
+      - name: FECHA_ENTRADA_COLECTIONS
+        description: Fecha de ingreso del cliente a la cartera y al  flujo de cobranza.
+        expr: FECHA_ENTRADA_COLECTIONS
+        data_type: TIMESTAMP_NTZ(9)
+        sample_values:
+          - '2026-03-16T00:32:07.000Z'
+          - '2026-05-13T03:01:49.000Z'
+          - '2026-04-16T02:08:27.000Z'
+      - name: FECHA_INSTALACION
+        synonyms:
+          - Fecha Activación
+        description: Fecha en la que se realizo la instalación al cliente.
+        expr: FECHA_INSTALACION
+        data_type: TIMESTAMP_NTZ(0)
+        sample_values:
+          - '2026-02-02T00:00:00.000Z'
+          - '2017-06-12T00:00:00.000Z'
+          - '2023-05-18T00:00:00.000Z'
+      - name: FECHA_ULTIMA_ORDEN_SUSPENSION
+        synonyms:
+          - Fecha cancelación
+          - Fecha desactivación
+          - Fecha suspensión
+          - Ultima Suspensión
+        description: Fecha de suspensión de servicios asociada al cliente.
+        expr: FECHA_ULTIMA_ORDEN_SUSPENSION
+        data_type: TIMESTAMP_NTZ(9)
+        sample_values:
+          - '2026-04-27T02:44:23.000Z'
+          - '2026-04-24T00:54:25.000Z'
+          - '2026-04-14T01:16:49.000Z'
+      - name: FECHA_ULTIMO_AJUSTE
+        synonyms:
+          - Fecha cobranza
+          - Fecha rectificación
+          - Ultimo ajuste
+        description: Fecha en la que se realizo el ultimo ajuste asociada a la cobranza del cliente
+        expr: FECHA_ULTIMO_AJUSTE
+        data_type: TIMESTAMP_NTZ(9)
+        sample_values:
+          - '2026-03-25T17:46:19.000Z'
+          - '2026-02-23T19:21:18.000Z'
+          - '2026-01-26T19:14:15.000Z'
+    facts:
+      - name: ANTIGUEDAD_DIAS_NATURALES
+        synonyms:
+          - Antigüedad Días
+          - Días de Antigüedad
+        description: Calculo de antigüedad expresado en días naturales del cliente
+        expr: ANTIGUEDAD_DIAS_NATURALES
+        data_type: NUMBER(9,0)
+        access_modifier: public_access
+        sample_values:
+          - '234'
+          - '806'
+          - '170'
+      - name: DEUDA
+        description: Valor total que el cliente debe al día actual (Saldo por vencer  + Saldo vencido).
+        expr: DEUDA
+        data_type: NUMBER(38,10)
+        access_modifier: public_access
+        sample_values:
+          - '1460.0068859999'
+          - '879.4899660000'
+          - '460.0053100000'
+      - name: DIAS_DESDE_ULTIMO_AJUSTE
+        synonyms:
+          - Días Ajustes
+          - Días Ajustes CC
+        description: Numero de días transcurridos desde el ultimo ajuste (Fecha Actual - Fecha Ajuste Ultimo).
+        expr: DIAS_DESDE_ULTIMO_AJUSTE
+        data_type: NUMBER(9,0)
+        access_modifier: public_access
+        sample_values:
+          - '30'
+          - '28'
+          - '75'
+      - name: DIAS_MORA
+        synonyms:
+          - Días de atraso de pago
+          - Días deudor
+          - Mora
+        description: Numero de días naturales de deuda que tiene el cliente (Solo se contempla de 1 a 90).
+        expr: DIAS_MORA
+        data_type: NUMBER(38,0)
+        access_modifier: public_access
+        sample_values:
+          - '56'
+          - '6'
+          - '16'
+      - name: EQUIPOS
+        synonyms:
+          - Dispositivos
+        description: Cantidad de equipos que tiene cada cliente.
+        expr: EQUIPOS
+        data_type: NUMBER(18,0)
+        access_modifier: public_access
+        sample_values:
+          - '1'
+          - '4'
+          - '2'
+      - name: MESES_ANTIGUEDAD
+        synonyms:
+          - Antigüedad Meses
+          - Meses de servicio
+        description: Calculo de antigüedad expresado en un valor numero de meses del cliente.
+        expr: MESES_ANTIGUEDAD
+        data_type: NUMBER(28,1)
+        access_modifier: public_access
+        sample_values:
+          - '4.9'
+          - '1.4'
+          - '4.4'
+      - name: SALDO_POR_VENCER
+        synonyms:
+          - Monto por vencer
+          - Saldo Futuro por deber
+        description: |
+          Monto en pesos mexicanos que el cliente tendrá pendiente por pagar en su cuenta al cierre de su próximo ciclo de facturación
+        expr: SALDO_POR_VENCER
+        data_type: NUMBER(38,0)
+        access_modifier: public_access
+        sample_values:
+          - '370'
+          - '1053'
+          - '460'
+      - name: SALDO_VENCIDO
+        synonyms:
+          - Deuda vigente
+          - Monto en mora
+          - Saldo Pendiente
+        description: |
+          Monto en pesos mexicanos que el cliente tiene pendiente por pagar en su cuenta el cierre de clico de facturación actual
+        expr: SALDO_VENCIDO
+        data_type: NUMBER(38,0)
+        access_modifier: public_access
+        sample_values:
+          - '605'
+          - '989'
+          - '474'
+verified_queries:
+  - name: '"¿Clientes con días de mora menor 7?"'
+    sql: |-
+      SELECT
+        cliente,
+        nombre,
+        dias_mora,
+        saldo_vencido,
+        saldo_por_vencer,
+        deuda,
+        metodo_pago,
+        estatus_cuenta,
+        region,
+        plaza,
+        fecha_ejecucion
+      FROM
+        sc_cartera_final_distribucion
+      WHERE
+        dias_mora < 7
+      ORDER BY
+        dias_mora ASC
+        /* Generated by Cortex Analyst (request_id: 7029054e-0cf4-4dbb-8d62-9e21ac0ee9e5) */
+    question: ¿Clientes con días de mora menor 7?
+    verified_at: 1781310969
+    verified_by: Angel Francisco Morales Ramirez
+    use_as_onboarding_question: false
+  - name: '"Agrupa a los clientes acorde a su tipo de VIT, y Estatus Cuenta"'
+    sql: |-
+      SELECT
+        play_cliente,
+        estatus_cuenta,
+        COUNT(DISTINCT cliente) AS total_clientes,
+        SUM(saldo_vencido) AS total_saldo_vencido,
+        SUM(saldo_por_vencer) AS total_saldo_por_vencer,
+        SUM(deuda) AS total_deuda
+      FROM
+        sc_cartera_final_distribucion
+      GROUP BY
+        play_cliente,
+        estatus_cuenta
+      ORDER BY
+        play_cliente,
+        estatus_cuenta
+        /* Generated by Cortex Analyst (request_id: 950e342a-f32b-4657-9fd2-6224eba5f1f0) */
+    question: Agrupa a los clientes acorde a su tipo de VIT, y Estatus Cuenta
+    verified_at: 1781520711
+    verified_by: Angel Francisco Morales Ramirez
+    use_as_onboarding_question: false
+  - name: '"¿Cuanto clientes morosos tiene la cartera?"'
+    sql: |-
+      SELECT
+        COUNT(DISTINCT cliente) AS total_clientes_morosos
+      FROM
+        sc_cartera_final_distribucion
+      WHERE
+        dias_mora > 0
+        /* Generated by Cortex Analyst (request_id: 7fe514f1-8b61-43fd-bb87-69d2265c6d31) */
+    question: ¿Cuanto clientes morosos tiene la cartera?
+    verified_at: 1781649055
+    verified_by: Angel Francisco Morales Ramirez
+    use_as_onboarding_question: false
+  - name: '"¿De cuando es esta ejecución?"'
+    sql: |-
+      SELECT
+        DISTINCT fecha_ejecucion
+      FROM
+        sc_cartera_final_distribucion
+      ORDER BY
+        fecha_ejecucion DESC NULLS LAST
+        /* Generated by Cortex Analyst (request_id: 606ada26-a7ca-460c-bf74-7933dc3f43ba) */
+    question: ¿De cuando es esta ejecución?
+    verified_at: 1781539669
+    verified_by: Angel Francisco Morales Ramirez
+    use_as_onboarding_question: false
+  - name: '"¿Cual es la región con mas clientes morosos?"'
+    sql: |-
+      SELECT
+        region,
+        COUNT(DISTINCT cliente) AS total_clientes_morosos
+      FROM
+        sc_cartera_final_distribucion
+      WHERE
+        dias_mora > 0
+      GROUP BY
+        region
+      ORDER BY
+        total_clientes_morosos DESC NULLS LAST
+      LIMIT
+        1
+        /* Generated by Cortex Analyst (request_id: 81173487-21de-416a-b11c-578988d1eaff) */
+    question: ¿Cual es la región con mas clientes morosos?
+    verified_at: 1781522027
+    verified_by: Angel Francisco Morales Ramirez
+    use_as_onboarding_question: false
+  - name: '"¿Cual son las 3 regiones con menos clientes morosos?"'
+    sql: |-
+      SELECT
+        region,
+        COUNT(DISTINCT cliente) AS total_clientes_morosos
+      FROM
+        sc_cartera_final_distribucion
+      WHERE
+        dias_mora > 0
+      GROUP BY
+        region
+      ORDER BY
+        total_clientes_morosos ASC
+      LIMIT
+        3
+        /* Generated by Cortex Analyst (request_id: 95738ee2-0a06-47c8-a908-e672dac426ec) */
+    question: ¿Cual son las 3 regiones con menos clientes morosos?
+    verified_at: 1781534282
+    verified_by: Angel Francisco Morales Ramirez
+    use_as_onboarding_question: false
+  - name: '"Los 5 días con que mas clientes entraron en mora"'
+    sql: |-
+      SELECT
+        TO_DATE(fecha_entrada_colections) AS dia_entrada,
+        COUNT(DISTINCT cliente) AS total_clientes
+      FROM
+        sc_cartera_final_distribucion
+      GROUP BY
+        TO_DATE(fecha_entrada_colections)
+      ORDER BY
+        total_clientes DESC NULLS LAST
+      LIMIT
+        5
+        /* Generated by Cortex Analyst (request_id: 27517d13-55dd-427d-87e0-6fcded649381) */
+    question: Los 5 días con que mas clientes entraron en mora
+    verified_at: 1781534636
+    verified_by: Angel Francisco Morales Ramirez
+    use_as_onboarding_question: false
+  - name: '"Cuales son los paquetes mas suspendidos para Abril 2026 en clientes en blacklist"'
+    sql: |-
+      SELECT
+        paquete,
+        COUNT(DISTINCT cliente) AS total_clientes_suspendidos
+      FROM
+        sc_cartera_final_distribucion
+      WHERE
+        blacklist = 'SI'
+        AND DATE_TRUNC('MONTH', fecha_ultima_orden_suspension) = '2026-04-01'
+      GROUP BY
+        paquete
+      ORDER BY
+        total_clientes_suspendidos DESC NULLS LAST
+        /* Generated by Cortex Analyst (request_id: 02e49f0a-c24a-4271-8d32-2b45c5a0791f) */
+    question: Cuales son los paquetes mas suspendidos para Abril 2026 en clientes en blacklist
+    verified_at: 1781534715
+    verified_by: Angel Francisco Morales Ramirez
+    use_as_onboarding_question: false
+  - name: '"Las regiones con clientes de riesgo mas alto"'
+    sql: |-
+      SELECT
+        region,
+        riesgo,
+        COUNT(DISTINCT cliente) AS total_clientes
+      FROM
+        sc_cartera_final_distribucion
+      WHERE
+        riesgo = 'Riesgo Alto/Muy Alto'
+      GROUP BY
+        region,
+        riesgo
+      ORDER BY
+        total_clientes DESC NULLS LAST
+        /* Generated by Cortex Analyst (request_id: 233e147a-3b0c-4727-b27e-310af035f8f2) */
+    question: Las regiones con clientes de riesgo mas alto
+    verified_at: 1781534785
+    verified_by: Angel Francisco Morales Ramirez
+    use_as_onboarding_question: false
+  - name: '"Cuantos clientes morosas hay para nombre de grupo en clientes con flg collections SUSPENDIDA ordenado por numero de clientes"'
+    sql: |-
+      SELECT
+        nombre_rpt,
+        COUNT(DISTINCT cliente) AS total_clientes_morosos
+      FROM
+        sc_cartera_final_distribucion
+      WHERE
+        dias_mora > 0
+        AND flg_status_collection = 'SUSPENDIDA'
+      GROUP BY
+        nombre_rpt
+      ORDER BY
+        total_clientes_morosos DESC NULLS LAST
+        /* Generated by Cortex Analyst (request_id: cab16a12-a441-4ad3-8fec-515f846ca377) */
+    question: Cuantos clientes morosas hay para nombre de grupo en clientes con flg collections SUSPENDIDA ordenado por numero de clientes
+    verified_at: 1781535034
+    verified_by: Angel Francisco Morales Ramirez
+    use_as_onboarding_question: false
