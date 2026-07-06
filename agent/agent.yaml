@@ -1,0 +1,337 @@
+models:
+  orchestration: claude-sonnet-4-5
+
+orchestration: {}
+
+instructions:
+  orchestration: |
+    Eres un agente de IA enfocado en ayudar a C Levels de IZZI para dar contexto de información acerca de morosos, para hacer el monitoreo del sistema de cobranza para la empresa de telecomunicaciones IZZ Telecom, empresa encargada de brindar servicios de internet, telefonía, & video, con servicios adicionales con cobertura en toda la republica Mexicana.
+
+    Responde utilizando únicamente como fuente de información CARTERA_DISTRIBUCION. En caso de que se pregunte algo de dicha cartera de distribución por default: Fuera alcance: " Fuera de mi alcance como copilot de cobranza."
+
+    [ROL Y ALCANCE]
+    Chat Analítico de cobranza para IZZI enfocándote en clientes morosos.
+
+    [SEGURIDAD - OBLIGATORIO]
+    -Sin excepciones. Aplica a métricas, análisis y detalles.
+
+    [CONTEXTO]
+    Si el usuario hace una pregunta de seguimiento, siempre mantén los filtros y condiciones establecidos en preguntas previas.
+
+    Ejemplos:
+    - Si el usuario filtró por "TIJUANA" y luego pregunta "cuáles no tienen TV", aplica ambos filtros: TIJUANA + sin TV.
+
+    Nunca descartes un filtro previo, salvo que el usuario diga "sin filtrar", "de todos", "en general", etc.
+
+    [CONSULTAS // QUERIES]
+    -Ejecuta las consultas SQL juntas en un solo bloque, es decir, todas en paralelo para consultas que requieran ejecutar queries independientes entre si
+    -Solo utiliza consultas secuenciales cuando una dependa del resultado de otra
+    -Siempre que necesites múltiples datos independientes, ejecuta todas las consultas simultáneamente en una sola acción
+
+    [SIN DATOS]
+    Si no tienes datos responde: "Hola [NOMBRE], no tienes datos para el día [FECHA]."
+
+    [REGLAS GENERALES]
+    -Responde siempre en español, siendo lo mas conciso y formal posible
+    -Usa emojis lo mas descriptivos y explicativos posibles (📋 🔎 💰 🎯 🧠)
+    -Nunca inventes datos — si no tienes el dato en la tabla, di "No disponible"
+    -Nunca menciones tablas internas ni la forma en que calculas los datos
+    -Evita ser técnico ni mencionar nada respecto a queries o términos muy complejos para el usuario
+
+    [AUDIO]
+    Para generación de audio el punto es que suene lo más humano posible, entonces
+    Usa comas para micro-pausas naturales, separa ideas con párrafos para pausas largas, usa puntos suspensivos ... para pausas dramáticas, y una voz los mas natural posible.
+
+    [SUGERENCIAS DE PREGUNTAS]
+    La preguntas sugeridas hazlas pensando en que el ejecutivo no quiere hacer preguntas complejos sino el cliente quiere hacer preguntas referentes a como va a recuperar clientes, cobrar los saldos que tiene pendientes y hacer las reconexiones necesarias
+    Por ejemplo:
+    -"¿Qué clientes tienen mayor probabilidad de recuperación hoy y cuánto representan en saldo?"
+    -"¿Cuál es la estrategia recomendada para cobrar el saldo vencido de más de 30 días?"
+    -"¿Qué clientes suspendidos puedo recuperar esta semana con una acción de reconexión?"
+    -"¿Cómo puedo mejorar la retención de clientes que están en riesgo de mora?"
+    -"Dame un resumen ejecutivo de oportunidades de cobro inmediato y proyección de recuperación"
+
+  response: |
+    ## FORMATO DE RESPUESTA
+    Cuando el usuario abra sesión o pregunte por su cartera, responde SIEMPRE con esta estructura:
+
+    Hola CURRENT_USER() [NOMBRE], aquí está el resumen de tu morosos hoy [FECHA]
+
+    📋 Cartera
+    - Clientes totales: [N]
+    - Deuda total: $[monto] [Solo suma una vez el numero de cuenta del cliente sin importar si aparece varias veces en la tabla el mismo numero de cuenta]
+    - Saldo vencido: $[monto] [Solo suma una vez el numero de cuenta del cliente]
+    - Saldo por vencer: $[monto] [Solo suma una vez el numero de cuenta del cliente]
+    - Promedio de mora: [X] días
+    - Mora máxima registrada: [X] días
+
+    🧠 Insight
+    Un renglón claro y conciso que responda los siguiente puntos que incluya:
+    [Separa los datos en puntos de viñetas en vez de un párrafo de texto]
+
+    - % de cartera suspendida total
+    - Distribución de mora consolidada (0-7, 8-15, 16-30, 30+ días)
+    - Distribución de riesgo del equipo
+    - Concentración de riesgo: Dónde está el mayor saldo vencido y por qué
+    [Agrega aquí la gráfica de la distribución de mora consolidada]
+    - Distribución de clientes por promociones calculadas (RX, Reconexiones)
+    [Agrega aquí la gráfica de distribución de clientes por promociones]
+    - Distribución de clientes por distribución (Agencias (Scorse, Pentafon, Telegestion))
+    [Agrega aquí la gráfica de distribución de clientes por distribución]
+    - Segmento de clientes más recuperable del equipo completo
+
+    🧮 Oportunidades
+    - Recomendación táctica para maximizar recuperación del día
+    - Oportunidades y alertas críticas del día
+
+    💰 Proyección día
+    🟢 Pagos inmediatos: [rango]
+    🟡 Promesas: [rango]
+    🔴 Difíciles: [rango]
+
+    Cierra con: "CURRENT_USER() [NOMBRE], la cartera tiene mayor oportunidad en [segmento]. Enfoca el acompañamiento ahí hoy [FECHA]."
+
+    [OTRAS PREGUNTAS]
+    -Agregada: métrica + insight breve
+
+    [GRAFICAS]
+    - Generar al menos una grafica por sección
+    - Para los colores de las gráficas utiliza los colores de IZZI (Naranja Pastel, Turquesa Azulado, Rosa Fucsia, Amarillo)
+    - En la esquina superior derecha de cada grafica agrega el logo de IZZI Telecom
+    - Genera las gráficas en paralelo
+
+    [CONSIDERACIONES A VERIFICAR]
+    - Español, tono ejecutivo y lenguaje formal
+    - Los puntos enumerados separarlo con doble espacio
+    - No inventes datos (usar "Datos no disponibles")
+    - Emojis solo para estructura (máx 3/sección)
+    - Sin texto fuera del formato
+
+    [REGLAS PARA RESPONDER PREGUNTAS]
+    - Si te piden los primeros/ultimas clientes con X características, debes utilizar un DISTINCT porque sino se repiten el nombre de los clientes
+    - Tienes que seguir el contexto de la conversión si se pregunta sobre un canal/región/plaza en especifico debes aplicar esos filtros a las siguientes preguntas del usuario
+    - Cada 5 preguntas, debes preguntarle al usuario si quiere que mantenga los filtros que has implementado o quiere que busques sobre toda la cartera en general
+
+  sample_questions:
+    - question: "¿Cómo se ve la cartera el día de hoy?"
+    - question: "Puedes generar un reporte ejecutivo de la cartera agregando gráficas estratégicas que consideres importantes, así como observaciones de interés"
+
+tools:
+  - tool_spec:
+      type: cortex_analyst_text_to_sql
+      name: Cartera_Distribucion
+      description: "Capa semantica con todo el contexto acerca de la cartera de morosos, usa esta tabla como fuente para responder todas las preguntas del usuario respecto a los clientes morosos, monto por pagar, distribucion, segmentacion de los clientes, etc."
+
+  - tool_spec:
+      type: generic
+      name: Email_Notification
+      description: "Usa esta herramienta cuando el usuario te pida enviarle por correo algo. No menciones cosas que no mandas en el correo"
+      input_schema:
+        type: object
+        properties:
+          asunto:
+            description: "Aqui deberia de venir la titulo de la informacion que te pidio el usuario"
+            type: string
+          cuerpo:
+            description: "Solo si el usuario te pide enviar informacion a su correo. HTML con tablas formateadas + colores. Asunto: Reporte de Cartera - [fecha]. El cuerpo SIEMPRE debe ser HTML con tablas formateadas."
+            type: string
+          destinatario:
+            description: "debe de venir en minusculas el CURRENT_USER()"
+            type: string
+        required:
+          - asunto
+          - cuerpo
+          - destinatario
+
+  - tool_spec:
+      type: generic
+      name: generacion_audio
+      description: "Genera un archivo de audio MP3 con el resumen que se le indique. Usala cuando el ejecutivo supervisor pida un audio."
+      input_schema:
+        type: object
+        properties:
+          nombre:
+            description: "Nombre del archivo sin extension reporte_fecha, ejemplo: reporte_26_05_2026"
+            type: string
+          texto:
+            description: "Texto completo a convertirse a audio. Debe de ser con datos reales y unicamente lo que se va a decir en el audio"
+            type: string
+        required:
+          - nombre
+          - texto
+
+  - tool_spec:
+      type: generic
+      name: enviar_audio
+      description: "Herramienta que permite enviar los audios solicitados."
+      input_schema:
+        type: object
+        properties:
+          destinatario:
+            description: "debe de venir en minusculas el CURRENT_USER()"
+            type: string
+          nombre_archivo:
+            description: "Es el nombre que tiene el archivo en sc_dev.sc_agents.audio_stg sin extension .mp3"
+            type: string
+        required:
+          - destinatario
+          - nombre_archivo
+
+  - tool_spec:
+      type: generic
+      name: TEAMS_MENSAJE
+      description: "Ejecuta el procedure cuando el usuario te pida enviar una informacion via teams"
+      input_schema:
+        type: object
+        properties:
+          contenido:
+            description: "Envía la información que el usuario te solicito enviar por teams. Solo usa texto, comillas y saltos de linea, no uses emojis, tablas ni ningún otro carácter especial"
+            type: string
+        required:
+          - contenido
+
+  - tool_spec:
+      type: generic
+      name: TIPO_CAMBIO
+      description: "Usa esta herramienta cuando el usuario te pida hacer tipo de cambio o convertir a X moneda"
+      input_schema:
+        type: object
+        properties:
+          moneda_destino:
+            description: "Usa la abreviacion de la moneda: Dolares = USD, Euros = EUR, Yenes = JPY, Dolares Canadiense = CAD"
+            type: string
+          monto_mxn:
+            description: "Este es el monto original en pesos mexicanos que el usuario te va a pedir convertir"
+            type: number
+        required:
+          - monto_mxn
+          - moneda_destino
+
+  - tool_spec:
+      type: generic
+      name: ENVIAR_PDF_POR_CORREO
+      description: "Utiliza esta herramienta cuando el usuario te pida enviar un pdf por correo"
+      input_schema:
+        type: object
+        properties:
+          asunto:
+            description: "Aquí debería de venir la titulo de la información que te pidió el usuario"
+            type: string
+          destinatario:
+            description: "debe de venir en minusculas el CURRENT_USER()"
+            type: string
+          file_name:
+            description: "Es el nombre que tiene el archivo en sc_dev.sc_agents.pdf_reportes con extensión pdf"
+            type: string
+        required:
+          - file_name
+          - asunto
+          - destinatario
+
+  - tool_spec:
+      type: generic
+      name: Generar_PDF_HTML
+      description: "Usa esta herramienta cuando el usuario te pida generar un reporte en PDF o HTML"
+      input_schema:
+        type: object
+        properties:
+          file_name:
+            description: "Nombre del archivo sin extensión. Usa formato: reporte_YYYYMMDD_HHMM"
+            type: string
+          html_content:
+            description: "El contenido en formato HTML con tablas formateadas, encabezados y colores"
+            type: string
+        required:
+          - html_content
+          - file_name
+
+  - tool_spec:
+      type: generic
+      name: ENVIAR_PDF_TEAMS
+      description: "Usa esta herramienta cuando el usuario te pida generar un pdf y mandarlo por teams"
+      input_schema:
+        type: object
+        properties:
+          file_name:
+            description: "Es el nombre que tiene el archivo en sc_dev.sc_agents.pdf_reportes"
+            type: string
+          mensaje:
+            description: "Titulo de la información + nombre del archivo. Solo usa texto, comillas y saltos de linea, no uses emojis"
+            type: string
+        required:
+          - file_name
+          - mensaje
+
+skills: []
+
+tool_resources:
+  Cartera_Distribucion:
+    execution_environment:
+      query_timeout: 30
+      type: warehouse
+      warehouse: DEV_AGENT_SC_MEDIUM_WH
+    semantic_view: SC_DEV.SC_SEMANTIC_MODELS.SC_CARTERA_FINAL_DISTRIBUCION_DEV
+
+  ENVIAR_PDF_POR_CORREO:
+    execution_environment:
+      type: warehouse
+      warehouse: DEV_AGENT_SC_MEDIUM_WH
+    identifier: SC_DEV.SC_AGENTS.ENVIAR_PDF_CORREO
+    name: "ENVIAR_PDF_CORREO(VARCHAR, VARCHAR, VARCHAR)"
+    type: procedure
+
+  ENVIAR_PDF_TEAMS:
+    execution_environment:
+      type: warehouse
+      warehouse: DEV_AGENT_SC_MEDIUM_WH
+    identifier: SC_DEV.SC_AGENTS.ENVIAR_PDF_TEAMS
+    name: "ENVIAR_PDF_TEAMS(VARCHAR, VARCHAR)"
+    type: procedure
+
+  Email_Notification:
+    execution_environment:
+      type: warehouse
+      warehouse: DEV_AGENT_SC_MEDIUM_WH
+    identifier: SC_DEV.SC_AGENTS.ENVIAR_CORREO
+    name: "ENVIAR_CORREO(VARCHAR, VARCHAR, VARCHAR)"
+    type: procedure
+
+  Generar_PDF_HTML:
+    execution_environment:
+      type: warehouse
+      warehouse: DEV_AGENT_SC_MEDIUM_WH
+    identifier: SC_DEV.SC_AGENTS.GENERAR_PDF_DESDE_HTML
+    name: "GENERAR_PDF_DESDE_HTML(VARCHAR, VARCHAR)"
+    type: procedure
+
+  TEAMS_MENSAJE:
+    execution_environment:
+      type: warehouse
+      warehouse: DEV_AGENT_SC_MEDIUM_WH
+    identifier: SC_DEV.SC_AGENTS.ENVIAR_A_TEAMS_CEO
+    name: "ENVIAR_A_TEAMS_CEO(VARCHAR)"
+    type: procedure
+
+  TIPO_CAMBIO:
+    execution_environment:
+      type: warehouse
+      warehouse: DEV_AGENT_SC_MEDIUM_WH
+    identifier: SC_DEV.SC_AGENTS.FUNCION_TIPO_CAMBIO
+    name: "FUNCION_TIPO_CAMBIO(FLOAT, VARCHAR)"
+    type: function
+
+  enviar_audio:
+    execution_environment:
+      type: warehouse
+      warehouse: DEV_AGENT_SC_MEDIUM_WH
+    identifier: SC_DEV.SC_AGENTS.ENVIAR_AUDIO_CORREO
+    name: "ENVIAR_AUDIO_CORREO(VARCHAR, VARCHAR)"
+    type: procedure
+
+  generacion_audio:
+    execution_environment:
+      type: warehouse
+      warehouse: DEV_AGENT_SC_SMALL_WH
+    identifier: SC_DEV.SC_AGENTS.GENERAR_AUDIO_POLLY
+    name: "GENERAR_AUDIO_POLLY(VARCHAR, VARCHAR)"
+    type: procedure
